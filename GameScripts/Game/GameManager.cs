@@ -17,6 +17,7 @@ namespace SuperStomper.GameScripts.Game
         private MapLoader levelLoader;
         private int currentLevel;
         private int coinsCollected;
+        private int allCoinsCollected;
         private float coinPitch;
         private float lastTimePickedACoin;
         private SoundEffect coinSound;
@@ -26,6 +27,7 @@ namespace SuperStomper.GameScripts.Game
         private KeyboardState lastKeyboardState;
         private int textFadeDirection;
         private float textFadeValue;
+        private CoinUI coinUI;
 
         private readonly Windowbox windowbox;
         private readonly ContentManager content;
@@ -53,11 +55,13 @@ namespace SuperStomper.GameScripts.Game
             currentLevel = 1;
             cameraPosition = Vector2.Zero;
             coinsCollected = 0;
+            allCoinsCollected = 0;
             gameState = GameState.MainMenu;
             font = content.Load<SpriteFont>(@"Fonts\Font");
             lastKeyboardState = Keyboard.GetState();
             textFadeDirection = 1;
             textFadeValue = 0;
+            coinUI = new CoinUI(content, windowbox, font);
         }
 
         public void Reset()
@@ -72,6 +76,7 @@ namespace SuperStomper.GameScripts.Game
             switch (gameState)
             {
                 case GameState.MainMenu:
+                    allCoinsCollected = 0; // coin counter
                     currentLevel = 1;
                     if (Keyboard.GetState().IsKeyDown(Keys.Down) && !lastKeyboardState.IsKeyDown(Keys.Down))
                     {
@@ -137,6 +142,8 @@ namespace SuperStomper.GameScripts.Game
 
                     break;
                 case GameState.Playing:
+                    coinUI.Update(deltaTime);
+
                     Mario mario = levelLoader.mario;
 
                     // Game Over
@@ -231,6 +238,7 @@ namespace SuperStomper.GameScripts.Game
                             coinSound.Play(1, coinPitch, 0);
 
                             coinsCollected++;
+                            allCoinsCollected++;
                             levelLoader.coins.RemoveAt(i--);
                             continue;
                         }
@@ -251,6 +259,8 @@ namespace SuperStomper.GameScripts.Game
                     cameraPosition.X = System.Math.Clamp(-mario.movement.position.X + Main.designedResolutionWidth / 2, -levelLoader.levelMaxWidth + Main.designedResolutionWidth, 0);
                     break;
                 default: // GameOver/Won
+                    coinUI.Update(deltaTime);
+
                     textFadeValue += deltaTime * textFadeDirection;
 
                     if (textFadeValue < 0 || textFadeValue > 1)
@@ -301,6 +311,10 @@ namespace SuperStomper.GameScripts.Game
                     windowSize = windowbox.GetScaledRect().Size;
 
                     spriteBatch.DrawString(font, wonText, new Vector2(windowSize.X / 2, windowSize.Y * 0.3f), Color.White, 0, font.MeasureString(wonText) / 2, 0.5f, SpriteEffects.None, 0);
+
+                    // Coin drawing
+                    coinUI.Draw(spriteBatch, allCoinsCollected, new Vector2(windowSize.X / 2, windowSize.Y * 0.5f));
+
                     spriteBatch.DrawString(font, backToMainMenuText, new Vector2(windowSize.X / 2, windowSize.Y * 0.7f), Color.White * textFadeValue, 0, font.MeasureString(backToMainMenuText) / 2, 0.5f, SpriteEffects.None, 0);
                     break;
                 case GameState.Playing:
@@ -329,6 +343,9 @@ namespace SuperStomper.GameScripts.Game
 
                     // Finally draw Mario, he should be on top of everything
                     levelLoader.mario.Draw(spriteBatch);
+
+                    // Coin UI
+                    coinUI.Draw(spriteBatch, coinsCollected);
                     break;
             }
         }

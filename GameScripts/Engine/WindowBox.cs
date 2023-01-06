@@ -12,19 +12,23 @@ namespace SuperStomper.GameScripts.Engine
         private readonly Microsoft.Xna.Framework.Game game;
         private readonly Color clearColor;
 
+
         /// Graphical buffer used to draw graphics
         /// elements until we're ready to send it to the screen.
         /// While we draw on the buffer, nothing appears on the screen
         /// until we decide to draw the buffer to the screen.
+
         private RenderTarget2D _renderTarget;
 
+
         /// Black bars (letterboxes and pillarboxes).
+
         /// 1. Horizontal stripes above and below a video are called letterboxes.
         ///    https://en.wikipedia.org/wiki/Letterboxing_(filming)
         ///
         /// 2. Vertical black bars are called pillarboxes.
         ///    https://en.wikipedia.org/wiki/Pillarbox
-        
+
         private Rectangle _renderScaleRectangle;
 
         private bool _initilized = false;
@@ -129,9 +133,11 @@ namespace SuperStomper.GameScripts.Engine
 
             _renderScaleRectangle = GetScaleRectangle();
 
+            /// <summary>
             /// Provides black bars similar to your TV screen
             /// based on actual resolution vs resolution
             /// design (design resolution).
+            /// </summary>
             /// <see cref="https://fr.wikipedia.org/wiki/Upscaling"/>
             Rectangle GetScaleRectangle()
             {

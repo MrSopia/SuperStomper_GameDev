@@ -30,7 +30,7 @@ namespace SuperStomper.GameScripts.Engine
             desiredVelocity.Y += gravityConstant * (desiredVelocity.Y >= 0 ? fallingGravityScale : risingGravityScale);
         }
 
-        // Steps:
+        // steps:
         // 1- if we moved, will there be a collsion?
         // 2- if there is a collision, then we shoot 4 rays
         // 3- two in the X direction (from top and bottom of player myHitbox)

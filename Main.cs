@@ -27,7 +27,7 @@ namespace SuperStomper
 
         protected override void Initialize()
         {
-            //initialization logic here
+            //Add your initialization logic here
 
             base.Initialize();
         }
@@ -48,7 +48,7 @@ namespace SuperStomper
 
         protected override void Update(GameTime gameTime)
         {
-            // update logic here
+            //Add your update logic here
             gameManager.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime);
@@ -56,7 +56,7 @@ namespace SuperStomper
 
         protected override void Draw(GameTime gameTime)
         {
-            //drawing code here
+            //Add your drawing code here
             windowbox.Draw(_spriteBatch, gameManager.Draw, samplerState: SamplerState.PointClamp, transformMatrix: Matrix.CreateTranslation(GameManager.cameraPosition.X, 0, 0));
 
             base.Draw(gameTime);
